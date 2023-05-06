@@ -84,7 +84,7 @@ public class SearchApi {
         createPageRankTable();
         createTitleTable(kvsClient);
         get("/", (req, res) -> mainPage(req, res));
-        get("/search/:pageSize/:pageNum", (req, res) -> searchHandler(req, res, kvsClient, kvsInfo));
+        get("/search", (req, res) -> searchHandler(req, res, kvsClient, kvsInfo));
         get("/synonym", (req, res) -> findSynonyms(req, res));
         get("/autocomplete", (req, res) -> autoComplete(req, res));
         get("/emptyquery", (req, res) -> emptryQuery(req, res));
@@ -229,8 +229,8 @@ public class SearchApi {
     public static String searchHandler(Request req, Response res, KVSClient kvsClient, String kvsInfo) throws Exception {
     	try {
     		String query = req.queryParams("query");
-    		String pageSize = req.params("pageSize");
-    		String pageNum = req.params("pageNum");
+    		String pageSize = req.queryParams("pageSize");
+    		String pageNum = req.queryParams("pageNum");
     		
     		Gson gson = new GsonBuilder().setPrettyPrinting().create();
     		

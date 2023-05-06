@@ -1,13 +1,4 @@
-.cache
-.dotnet
-.ssh
-.vscode-server
-java
-
 # Worker Data
 worker1
 worker2
 data
-
-# sh files
-*.sh
