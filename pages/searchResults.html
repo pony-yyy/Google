@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Search Results</title>
+    <!-- <link href="../css/searchResults.css" rel="stylesheet"></link> -->
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Rubik+Dirt&display=swap');
+
+      .fancy-font {
+        font-family: 'Rubik Dirt', cursive;
+      }
+
+      .caption-font {
+        font-size: 0.8rem;
+      }
+
+      .description {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        max-height: 2.4rem; /* two lines with 1.8rem line-height */
+        overflow: hidden;
+        white-space: normal; /* allow multiple lines */
+        text-overflow: ellipsis;
+        line-height: 1.2rem; /* adjust to match font size and line height of text */
+      }
+
+      #pagination-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+      }
+
+      #pagination-container a {
+        color: blue;
+        margin: 0 5px;
+        cursor: pointer;
+      }
+
+      /* #list li {
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 1px solid black;
+      } */
+    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+  </head>
+  <body>
+    <div class="d-flex flex-column">
+      <nav class="navbar navbar-dark bg-dark d-flex justify-content-start px-2 py-3">
+        <a class="navbar-brand mx-4 fancy-font" href="../index.html">NetNinjas</a>
+        <form class="form-inline my-2 my-lg-0 d-flex" style="width: 35%">
+            <div class="input-group rounded-pill">
+              <input type="text" class="form-control px-4 bg-light-subtle rounded-start-pill" placeholder="Search">
+              <button class="btn bg-light-subtle rounded-end-pill" type="button">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#333333"><path d="M0 0h24v24H0z" fill="none"/><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+              </button>
+            </div>
+        </form>
+      </nav>
+      <div class="container my-4 flex-grow-1">
+        <hr />
+        <p class="fs-6 text-secondary">About 250,000 results</p>
+        <div class="row">
+          <div class="col-lg-8" id="list">
+            <a href="https://www.google.com" class="text-decoration-none">
+              <div class="card mb-3">
+                <div class="card-body">
+                  <div class="d-flex align-items-center mb-2">
+                    <img class="rounded-circle me-2" width="24px" height="24px" src="https://picsum.photos/50/50" alt="Website Icon">
+                    <div>
+                      <p class="caption-font fw-bold mb-0">Title of the Website</p>
+                      <p class="caption-font mb-0 text-secondary">https://sahjdkaldj.com</p>
+                    </div>
+                  </div>
+                  <div class="description">
+                    <p class="mb-0 text-dark-emphasis">Discover the world's top news stories on our website. From breaking news to in-depth analysis, we cover a range of topics including politics, business, technology, entertainment and more. Our team of experienced journalists provides accurate and impartial reporting, ensuring you stay informed about the latest events. Join our community today and start exploring the world through our comprehensive news coverage.</p>
+                  </div>
+                </div>
+              </div>
+            </a>
+            <a href="https://www.google.com" class="text-decoration-none">
+              <div class="card mb-3">
+                <div class="card-body">
+                  <div class="d-flex align-items-center mb-2">
+                    <img class="rounded-circle me-2" width="24px" height="24px" src="https://picsum.photos/50/50" alt="Website Icon">
+                    <div>
+                      <p class="caption-font fw-bold mb-0">Title of the Website</p>
+                      <p class="caption-font mb-0 text-secondary">https://sahjdkaldj.com</p>
+                    </div>
+                  </div>
+                  <div class="description">
+                    <p class="mb-0 text-dark-emphasis">Discover the world's top news stories on our website. From breaking news to in-depth analysis, we cover a range of topics including politics, business, technology, entertainment and more. Our team of experienced journalists provides accurate and impartial reporting, ensuring you stay informed about the latest events. Join our community today and start exploring the world through our comprehensive news coverage.</p>
+                  </div>
+                </div>
+              </div>
+            </a>
+            <a href="https://www.google.com" class="text-decoration-none">
+              <div class="card mb-3">
+                <div class="card-body">
+                  <div class="d-flex align-items-center mb-2">
+                    <img class="rounded-circle me-2" width="24px" height="24px" src="https://picsum.photos/50/50" alt="Website Icon">
+                    <div>
+                      <p class="caption-font fw-bold mb-0">Title of the Website</p>
+                      <p class="caption-font mb-0 text-secondary">https://sahjdkaldj.com</p>
+                    </div>
+                  </div>
+                  <div class="description">
+                    <p class="mb-0 text-dark-emphasis">Discover the world's top news stories on our website. From breaking news to in-depth analysis, we cover a range of topics including politics, business, technology, entertainment and more. Our team of experienced journalists provides accurate and impartial reporting, ensuring you stay informed about the latest events. Join our community today and start exploring the world through our comprehensive news coverage.</p>
+                  </div>
+                </div>
+              </div>
+            </a>
+            <a href="https://www.google.com" class="text-decoration-none">
+              <div class="card mb-3">
+                <div class="card-body">
+                  <div class="d-flex align-items-center mb-2">
+                    <img class="rounded-circle me-2" width="24px" height="24px" src="https://picsum.photos/50/50" alt="Website Icon">
+                    <div>
+                      <p class="caption-font fw-bold mb-0">Title of the Website</p>
+                      <p class="caption-font mb-0 text-secondary">https://sahjdkaldj.com</p>
+                    </div>
+                  </div>
+                  <div class="description">
+                    <p class="mb-0 text-dark-emphasis">Discover the world's top news stories on our website. From breaking news to in-depth analysis, we cover a range of topics including politics, business, technology, entertainment and more. Our team of experienced journalists provides accurate and impartial reporting, ensuring you stay informed about the latest events. Join our community today and start exploring the world through our comprehensive news coverage.</p>
+                  </div>
+                </div>
+              </div>
+            </a>
+            <a href="https://www.google.com" class="text-decoration-none">
+              <div class="card mb-3">
+                <div class="card-body">
+                  <div class="d-flex align-items-center mb-2">
+                    <img class="rounded-circle me-2" width="24px" height="24px" src="https://picsum.photos/50/50" alt="Website Icon">
+                    <div>
+                      <p class="caption-font fw-bold mb-0">Title of the Website</p>
+                      <p class="caption-font mb-0 text-secondary">https://sahjdkaldj.com</p>
+                    </div>
+                  </div>
+                  <div class="description">
+                    <p class="mb-0 text-dark-emphasis">Discover the world's top news stories on our website. From breaking news to in-depth analysis, we cover a range of topics including politics, business, technology, entertainment and more. Our team of experienced journalists provides accurate and impartial reporting, ensuring you stay informed about the latest events. Join our community today and start exploring the world through our comprehensive news coverage.</p>
+                  </div>
+                </div>
+              </div>
+            </a>
+            <a href="https://www.google.com" class="text-decoration-none">
+              <div class="card mb-3">
+                <div class="card-body">
+                  <div class="d-flex align-items-center mb-2">
+                    <img class="rounded-circle me-2" width="24px" height="24px" src="https://picsum.photos/50/50" alt="Website Icon">
+                    <div>
+                      <p class="caption-font fw-bold mb-0">Title of the Website</p>
+                      <p class="caption-font mb-0 text-secondary">https://sahjdkaldj.com</p>
+                    </div>
+                  </div>
+                  <div class="description">
+                    <p class="mb-0 text-dark-emphasis">Discover the world's top news stories on our website. From breaking news to in-depth analysis, we cover a range of topics including politics, business, technology, entertainment and more. Our team of experienced journalists provides accurate and impartial reporting, ensuring you stay informed about the latest events. Join our community today and start exploring the world through our comprehensive news coverage.</p>
+                  </div>
+                </div>
+              </div>
+            </a>
+            <a href="https://www.google.com" class="text-decoration-none">
+              <div class="card mb-3">
+                <div class="card-body">
+                  <div class="d-flex align-items-center mb-2">
+                    <img class="rounded-circle me-2" width="24px" height="24px" src="https://picsum.photos/50/50" alt="Website Icon">
+                    <div>
+                      <p class="caption-font fw-bold mb-0">Title of the Website</p>
+                      <p class="caption-font mb-0 text-secondary">https://sahjdkaldj.com</p>
+                    </div>
+                  </div>
+                  <div class="description">
+                    <p class="mb-0 text-dark-emphasis">Discover the world's top news stories on our website. From breaking news to in-depth analysis, we cover a range of topics including politics, business, technology, entertainment and more. Our team of experienced journalists provides accurate and impartial reporting, ensuring you stay informed about the latest events. Join our community today and start exploring the world through our comprehensive news coverage.</p>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+          <!-- <div class="col-md-4">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Related Searches</h5>
+                <ul class="list-group">
+                  <li class="list-group-item">Related search 1</li>
+                  <li class="list-group-item">Related search 2</li>
+                  <li class="list-group-item">Related search 3</li>
+                </ul>
+              </div>
+            </div>
+          </div> -->
+        </div>
+        <div id="pagination-container"></div>
+      </div>
+    </div>
+    <script src="../js/searchResults.js"></script>
+    <script>
+      const searchQuery = window.location.search.slice(1); // get the search query from URL
+      const searchResultsEl = document.getElementById("search-results"); // get the search results element from the page
+
+      fetch(`https://example.com/api/search?q=${searchQuery}`) // fetch search results from API
+        .then((response) => response.json())
+        .then((data) => {
+          // loop through search results and create HTML for each result
+          data.forEach((result) => {
+            const resultEl = document.createElement("div");
+            resultEl.classList.add("search-result");
+
+            const titleEl = document.createElement("h2");
+            titleEl.textContent = result.title;
+            resultEl.appendChild(titleEl);
+
+            const descriptionEl = document.createElement("p");
+            descriptionEl.textContent = result.description;
+            resultEl.appendChild(descriptionEl);
+
+            const linkEl = document.createElement("a");
+            linkEl.href = result.link;
+            linkEl.textContent = result.link;
+            resultEl.appendChild(linkEl);
+
+            searchResultsEl.appendChild(resultEl); // add result to the page
+          });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+
+      const itemsPerPage = 5;
+      let currentPage = 1;
+
+      const list = document.getElementById('list');
+      const paginationContainer = document.getElementById('pagination-container');
+
+      function showPage(page) {
+        const startIndex = (page - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const items = list.querySelectorAll('a');
+
+        items.forEach((item, index) => {
+          if (index >= startIndex && index < endIndex) {
+            item.style.display = 'block';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      }
+
+      function createPaginationLinks(totalPages) {
+        paginationContainer.innerHTML = '';
+
+        for (let i = 1; i <= totalPages; i++) {
+          const link = document.createElement('a');
+          link.textContent = i;
+
+          if (i === currentPage) {
+            link.classList.add('active');
+          }
+
+          link.addEventListener('click', () => {
+            currentPage = i;
+            showPage(currentPage);
+            updatePaginationLinks(totalPages);
+          });
+
+          paginationContainer.appendChild(link);
+        }
+      }
+
+      function updatePaginationLinks(totalPages) {
+        const links = paginationContainer.querySelectorAll('a');
+
+        links.forEach((link, index) => {
+          if (index + 1 === currentPage) {
+            link.classList.add('active');
+            link.classList.remove('text-decoration-none');
+          } else {
+            link.classList.remove('active');
+            link.classList.add('text-decoration-none');
+          }
+        });
+      }
+
+      showPage(currentPage);
+      createPaginationLinks(Math.ceil(list.children.length / itemsPerPage));
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+  </body>
+</html>

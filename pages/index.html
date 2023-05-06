@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>NetNinjas Search Engine</title>
+    <!-- Link to Bootstrap CSS -->
+    <!-- <link href="css/index.css" rel="stylesheet"></link> -->
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Rubik+Dirt&display=swap');
+
+      .search-section {
+        height: 40%;
+      }
+
+      .fancy-font {
+        font-family: 'Rubik Dirt', cursive;
+      }
+
+      .search-input {
+        height:3.5rem;
+      }
+
+      .search-btn {
+        height:3.5rem;
+        width: 8rem;
+      }
+
+      .hover-list-item:hover {
+        background-color: #555555;
+        color: #ffffff;
+      }
+
+      .form-control:focus {
+        border-color: #333333 !important;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px #333333 !important;
+      }
+    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row justify-content-center align-items-center" style="height: 100vh;">
+        <div class="col-md-6 search-section">
+          <h1 class="text-center mb-5 fancy-font">NetNinjas</h1>
+          <form action="pages/searchResults.html?q=q" method="get">
+            <div class="input-group mb-2">
+              <input type="text" name="q" id="search-bar-input" class="form-control rounded-start-pill px-4 search-input" placeholder="Search" name="q">
+              <div class="input-group-append">
+                <button class="btn btn-dark rounded-end-pill search-btn" type="submit">Search</button>
+              </div>
+            </div>
+            <div class="dropdown">
+              <ul id="search-words-list" class="list-group">
+              </ul>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- Link to Bootstrap JS and jQuery -->
+    <!-- <script src="js/index.js"></script> -->
+    <script>
+      const searchBar = document.getElementById('search-bar-input');
+      const searchList = document.getElementById('search-words-list');
+      const listItems = document.querySelectorAll('.list-group-item');
+      function fetchRelativeWords(input) {
+        const url = `https://api.datamuse.com/words?sl=${input}&max=8`;
+        fetch(url)
+          .then((response) => response.json())
+          .then((data) => {
+            searchList.innerHTML = '';
+
+            data.forEach((item) => {
+              const li = document.createElement('li');
+              li.classList.add('list-group-item');
+              li.classList.add('hover-list-item');
+              li.textContent = item.word;
+              li.addEventListener('click', () => {
+                window.location.href = `searchResults.html?q=${item.word}`;
+              });
+              searchList.appendChild(li);
+            });
+          });
+      }
+
+      searchBar.addEventListener('keyup', (e) => {
+        const searchString = e.target.value.toLowerCase();
+        fetchRelativeWords(searchString);
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+  </body>
+</html>
