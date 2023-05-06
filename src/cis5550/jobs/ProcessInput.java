@@ -28,7 +28,7 @@ public class ProcessInput {
 	
 	public static String tokenizeAndNormalizeInput(String searchInput) {
 		// Remove punctuation, CR, LF, and tab characters
-		String noPunct = searchInput.replaceAll("[\\p{Punct}\\s]+", " ");
+		String noPunct = searchInput.replaceAll("[\\p{Punct}\\s]+", " ").replaceAll("[^a-zA-Z0-9 ]", "");
 		// Convert string to lower case and split by space
 		String input = noPunct.toLowerCase();
 		return input;

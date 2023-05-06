@@ -26,6 +26,9 @@ public class RankScore {
 	
 	// base for title
 	private final static int base = 100000;
+
+	// base for url match
+	private final static int baseUrl = 100000;
 	
 	public static Map<String, Double> calculatePriorityScore(Map<String, Set<String>> synonym, Map<String, Integer> wordFrenquency, String kvsInfo, Map<String, Double> pageRankMap, Map<String, String> titleMap) throws IOException {
 //		readIndexTable(kvsClient);
@@ -49,8 +52,10 @@ public class RankScore {
 			
 			// If the current url contains title, then add a very high score to it
 			String title = titleMap.getOrDefault(key, "");
+			String[] splittedUrl = key.split("[\\p{Punct}\\s]+");
 			for (String word: words) {
 				if (title.replaceAll("[^a-zA-Z0-9 ]", " ").matches(".*\\b" + word + "\\b.*")) priorityScore += base;
+				if (key.matches(".*\\b" + word + "\\b.*")) priorityScore += baseUrl;
 			}
 			
 			urlTFIDF.put(key, priorityScore);
@@ -70,7 +75,6 @@ public class RankScore {
 
 		return sortedMap;
 	}
-
 	private static Map<String, Double> calculateTFIDF(Map<String, Set<String>> synonym, Map<String, Integer> wordFrequency, KVSClient kvsClient) throws IOException {
 		// Root word only
 		// Phrase search (at least two words)

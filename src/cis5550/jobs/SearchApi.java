@@ -54,7 +54,7 @@ public class SearchApi {
     private static Map<String, String> titleMap = new HashMap<>();
     private static Map<String, String> queryPageNumAndPageSizeMap = new HashMap<>();
     
-    private final static long gcInterval = 60000;
+    private final static long gcInterval = 1800000;
     private static Timer gcTimer = new Timer();
     
     private static int workerSize = 2;
@@ -84,6 +84,7 @@ public class SearchApi {
         createPageRankTable();
         createTitleTable(kvsClient);
         get("/", (req, res) -> mainPage(req, res));
+        get("/searchResults", (req, res) -> searchResultsPage(req, res));
         get("/search", (req, res) -> searchHandler(req, res, kvsClient, kvsInfo));
         get("/synonym", (req, res) -> findSynonyms(req, res));
         get("/autocomplete", (req, res) -> autoComplete(req, res));
@@ -105,8 +106,23 @@ public class SearchApi {
     }
 
     public static String mainPage(Request req, Response res) throws Exception {
-        // Create the HTML content to be returned
+        // Read the HTML content to be returned
         String html = readHtmlFile("pages/index.html");
+        res.type("text/html");
+        res.write(html.getBytes());
+        return "OK";
+    }
+
+    public static String searchResultsPage(Request req, Response res) throws Exception {
+       	// No query input is given, return the 5 most recent search queries
+		if (req.queryParams("query") == null) {
+            res.status(404, "No query content");
+			return "FAIL";
+		}
+        String queryItem = req.queryParams("query");
+        
+        // Read the HTML content to be returned
+        String html = readHtmlFile("pages/searchResults.html");
         res.type("text/html");
         res.write(html.getBytes());
         return "OK";
@@ -270,6 +286,10 @@ public class SearchApi {
             queryPageNumAndPageSizeMap.put(encodedQuery, pageSize + "_" + pageNum);  
         	
             Map<String, List<SearchOutput>> jsonMap = new HashMap<>();
+            List<SearchOutput> count = new ArrayList<>();
+            count.add(new SearchOutput(String.valueOf(priorityScoreMap.keySet().size()), "", ""));
+            
+            jsonMap.put("count", count);
             jsonMap.put("results", storedResults);
             String jsonResponse = gson.toJson(jsonMap);
             
