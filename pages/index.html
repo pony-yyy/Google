@@ -61,7 +61,9 @@
     <!-- Link to Bootstrap JS and jQuery -->
     <!-- <script src="js/index.js"></script> -->
     <script>
-      const host = "http://3.228.112.141:8080"
+      const protocol = window.location.protocol;
+      const hostname = window.location.host;
+      const host = protocol + "//" + hostname;
       const searchBar = document.getElementById('search-bar-input');
       const searchList = document.getElementById('search-words-list');
       const listItems = document.querySelectorAll('.list-group-item');
