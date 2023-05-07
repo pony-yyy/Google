@@ -173,7 +173,7 @@ public class SearchApi {
             public void run() {
             	if (accessedTimeMap.entrySet() != null) {
             		for (Entry<String, Long> entry : accessedTimeMap.entrySet()) {
-                		if (System.currentTimeMillis() - entry.getValue() >= gcInterval) {
+                		if (System.currentTimeMillis() - entry.getValue() >= gcInterval || accessedTimeMap.size() > 1000) {
                 			outputMap.remove(entry.getKey());
                             accessedTimeMap.remove(entry.getKey());
                             queryPageNumAndPageSizeMap.remove(entry.getKey());
@@ -245,6 +245,7 @@ public class SearchApi {
 
     public static String searchHandler(Request req, Response res, KVSClient kvsClient, String kvsInfo) throws Exception {
     	try {
+            Long startTime = System.currentTimeMillis();
     		String query = req.queryParams("query");
     		String pageSize = req.queryParams("pageSize");
     		String pageNum = req.queryParams("pageNum");
@@ -260,11 +261,14 @@ public class SearchApi {
                 jsonMap.put("count", queryCountMap.get(encodedQuery));
             	String jsonResponse = gson.toJson(jsonMap);
             	accessedTimeMap.put(encodedQuery, System.currentTimeMillis());
+                System.out.println("search completed.");
+                System.out.println("-----------------");
                 res.write(jsonResponse.getBytes());
                 return "OK";
             }
             // Process search inputs
             String tokenizedInput = ProcessInput.tokenizeAndNormalizeInput(encodedQuery);
+            System.out.println("search input: " + tokenizedInput);
             String noStopWordInput = ProcessInput.removeStopWords(tokenizedInput);
             System.out.println("no stop input: " + noStopWordInput);
             // stemming or not? depends
@@ -296,14 +300,19 @@ public class SearchApi {
             jsonMap.put("results", storedResults);
             String jsonResponse = gson.toJson(jsonMap);
             
-            // Update the time of the query in the accessedTimeMap 
+            // Update the time of the query in the accessedTimeMap
             accessedTimeMap.put(encodedQuery, System.currentTimeMillis());
             
             // Put each search word and its frequency into the searchwordCount map
             for (String word : tokenizedInput.split("\\s+")) {
             	searchwordCount.put(word, searchwordCount.getOrDefault(word, 0) + 1);
             }
-            
+
+            System.out.println("search completed.");
+            System.out.println("-----------------");
+            Long endTime = System.currentTimeMillis();
+            Double duration = (endTime - startTime) / 1000.0;
+            System.out.println("search completed in " + duration + " seconds");
             res.write(jsonResponse.getBytes());
             return "OK";
     	} catch (Exception e) {

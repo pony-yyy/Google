@@ -45,9 +45,7 @@ public class ProcessInput {
 			ArrayList<String> allWords = Stream.of(searchInput.split("\\s+")).collect(Collectors.toCollection(ArrayList<String>::new));
 			allWords.removeAll(stopwords);
 			noStopInput = allWords.stream().collect(Collectors.joining(" "));
-			System.out.println("output: " + noStopInput);
 		}
-		System.out.println("output: " + noStopInput);
 		// If a input contains all stopwords or the length of the noStopInput is too short(i.e 1), then it is better to keep all them
 		if (noStopInput == null || noStopInput.split("\\s+").length <= 1) return searchInput;
 		else return noStopInput;
