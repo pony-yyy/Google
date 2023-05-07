@@ -1,9 +1,23 @@
 # NetNinjas
+## Introduction
 This search engine project consists of a Java-based backend for crawling and page ranking, and a frontend for user interface. The backend crawls and indexes web pages, calculates page ranks and serves search results to the frontend. The frontend provides a user-friendly interface for searching and viewing results.
 
-# Supported Routes
-## Frontend Routes
-### Route 1
+## Folder Structure
+**pages**
+The frontend codes of the project using HTML&CSS
+
+**src**
+The backend codes of the project using Java
+
+**lib**
+The jar libraries backend codes depend on
+
+**bin**
+The classess files
+
+## Supported Routes
+### Frontend Routes
+#### Route 1
 ***`get("/")`***
 
 This route displays the main page of Nenninjas search engine. On this page, user can type in any word or phrases to search. 
@@ -22,7 +36,7 @@ http://34.231.82.155:8080/
 *Example Response*: 
 Page with Netninjas title and single search bar just like Google. 
 
-### Route 2
+#### Route 2
 ***`get("/searchResults")`***
 
 This API shows the search results and display those results to the user. 
@@ -41,8 +55,8 @@ http://34.231.82.155:8080/searchResults?query=amazon
 *Example Response*: 
 The webpage displays search results and features a search bar at the top for users to refine their search. The left side of the screen presents each result in a format that includes the page title, URL, and a snippet. On the top right corner, there is a list of five synonym words related to the search input.
 
-## Backend Routes
-### Route 1
+### Backend Routes
+#### Route 1
 ***`get("/search") `*** 
 
 This search API accepts a query string as input and return a list of search results that match the query.
@@ -65,7 +79,7 @@ http://34.231.82.155:8080/search?query=apple?&pageSize=10&pageNum=1
 { "count": [ { "url": "1591", "title": "", "snippet": "" } ], "results": [ { "url": "https://music.apple.com:443/mz/browse", "title": " apple music", "snippet": "apple music african davido stays focused on the bag on unavailable...." }, { "url": "https://music.apple.com:443/lr/browse", "title": " apple music", "snippet": "apple music african a seminal voice in abujas hiphop scene comes to the fore...." }]}
 ```
 
-### Route 2
+#### Route 2
 ***`get("/synonym")`***  
 
 This route will return sentences that are similar to input query and synonym words of each non-stop words
@@ -86,7 +100,7 @@ http://34.231.82.155:8080/synonym?query=pizza%20near%20Sydney_help
 { "results": { "similarSentences": [ "sandwich near sydney help", "pizza nearby sydney help", "pizza near melbourne help", "pizza near sydney helping" ], "storedSynonyms": [ { "rootWord": "help", "similarWords": [ "helping", "bring", "need", "take", "helps" ] }, { "rootWord": "sydney", "similarWords": [ "melbourne", "adelaide", "brisbane", "perth", "auckland" ] }, { "rootWord": "near", "similarWords": [ "nearby", "town", "area", "outskirts", "northeast" ] }, { "rootWord": "pizza", "similarWords": [ "sandwich", "sandwiches", "snack", "bakery", "fries" ] } ] } }  
 ```
 
-### Route 3
+#### Route 3
 ***`get("/autocomplete")`***   
 This API accepts a query string as input and return a list of suggested search terms based on the last word of the search string.
 
@@ -106,7 +120,7 @@ http://34.231.82.155:8080/autocomplete?query=appl
 { "suggestions": [ { "term": "appl", "count": 0 }, { "term": "applause", "count": 0 }, { "term": "applauses", "count": 0 }, { "term": "applausive", "count": 0 }, { "term": "applausively", "count": 0 }, { "term": "applaud", "count": 0 }, { "term": "applaudable", "count": 0 }, { "term": "applaudably", "count": 0 }, { "term": "applauds", "count": 0 }, { "term": "applauder", "count": 0 } ] }
 ```
 
-### Route 4
+#### Route 4
 ***`get("/emptyquery")`***  
 This route can be called when the input query is null. The response will be up to 5 most recent search histories.
 
@@ -126,19 +140,19 @@ http://34.231.82.155:8080/emptyquery
 { "results": [ { "url": "https://en.wikipedia.org:443/wiki/2023_in_hip_hop_music"}, { "url": "https://en.wikipedia.org:443/wiki/Taylor_Swift_(album)"} ] } 
 ```
 
-# Instructions to Start the Server
-## Download large files:
+## Instructions to Download Necessary Files and Start the Server
+### Download large files:
 ***Put these three files into the /data folder***  
 - `englishwords.txt`: https://drive.google.com/file/d/1SaXCfJu-zUjSiWVWMDbGxpu3QhbFaZKc/view?usp=share_link  
 - `glove.6B.50d.txt`: https://drive.google.com/file/d/1ZPHgJB1L90dNspy085HD0L7UWjgRYNua/view?usp=share_link  
 - `stopwords.txt`: https://drive.google.com/file/d/1VpvjO7y1P5LA-gbdQunnQhzqbWIZQ9t2/view?usp=share_link  
 
-***Download six workers folders from Google Drive and only leave id, urlpages.table, index.table, and pageranks.table in the folders ***
+***Download six workers folders from Google Drive and only leave id, urlpages.table, index.table, and pageranks.table in the folders***
 - `Google Drive Link`: https://drive.google.com/drive/u/1/folders/1ZJzV18o8drNQDO7vvCZWd3MWLW1HS1Wk
 
 ***Note***: Each worker folder needs to be stay on the root directory of /NetNinjas-ssh.
 
-## How to start the backend server
+### Start the backend server
 To start the server, first start the KVS master:
 
 1. java -cp lib/kvs.jar:lib/webserver.jar cis5550.kvs.Master 8000 
@@ -159,7 +173,7 @@ Finally start the backend server and wait until all cached data is prepared:
 
 Note that the last two arguments correspond to **KVSClient address** and **Backend port number**, respectively.  
 
-# EC2 Setup
+## EC2 Setup
 ### Git setup
 To install Git on an EC2 instance running Amazon Linux 2, you can use the following command:
 ```bash
