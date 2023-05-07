@@ -155,7 +155,7 @@ http://3.228.112.141:8080/emptyquery
 ### Start the backend server
 To start the server, first start the KVS master:
 
-1. java -cp lib/kvs.jar:lib/webserver.jar cis5550.kvs.Master 8000 
+1. java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Master 8000 
 
 And six KVS workers:
 1. java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8001 worker1 3.228.112.141:8000
@@ -169,11 +169,12 @@ And six KVS workers:
 - Check the status of backend KVS workers: ```http://3.228.112.141:8000/```
 
 Finally start the backend server and wait until all cached data is prepared:
-- ***java -cp lib/kvs.jar:lib/webserver.jar:lib/gson.jar:lib/ranking.jar src/cis5550/jobs/SearchApi.java 3.228.112.141:8000 8080***
+- ***java -cp lib/kvs.jar:lib/webserver.jar:lib/gson.jar:lib/ranking.jar:lib/tools.jar src/cis5550/jobs/SearchApi.java 3.228.112.141:8000 8080***
 
 Note that the last two arguments correspond to **KVSClient address** and **Backend port number**, respectively.  
 
-## EC2 Setup
+## EC2 Deployment and Setup
+We have deployed our web application on an EC2 instance on AWS and have also set up a domain name for it. The website is available on ```http://3.228.112.141:8080/```   
 ### Git setup
 To install Git on an EC2 instance running Amazon Linux 2, you can use the following command:
 ```bash
