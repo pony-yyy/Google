@@ -53,6 +53,7 @@ public class SearchApi {
     private static Map<String, Double> pageRankMap = new HashMap<>();
     private static Map<String, String> titleMap = new HashMap<>();
     private static Map<String, String> queryPageNumAndPageSizeMap = new HashMap<>();
+    private static Map<String, List<SearchOutput>> queryCountMap = new HashMap<>();
     
     private final static long gcInterval = 1800000;
     private static Timer gcTimer = new Timer();
@@ -256,6 +257,7 @@ public class SearchApi {
             	List<SearchOutput> storedResults = outputMap.get(encodedQuery);
                 Map<String, List<SearchOutput>> jsonMap = new HashMap<>();
                 jsonMap.put("results", storedResults);
+                jsonMap.put("count", queryCountMap.get(encodedQuery));
             	String jsonResponse = gson.toJson(jsonMap);
             	accessedTimeMap.put(encodedQuery, System.currentTimeMillis());
                 res.write(jsonResponse.getBytes());
@@ -288,6 +290,7 @@ public class SearchApi {
             Map<String, List<SearchOutput>> jsonMap = new HashMap<>();
             List<SearchOutput> count = new ArrayList<>();
             count.add(new SearchOutput(String.valueOf(priorityScoreMap.keySet().size()), "", ""));
+            queryCountMap.put(encodedQuery, count);
             
             jsonMap.put("count", count);
             jsonMap.put("results", storedResults);

@@ -1,36 +1,12 @@
-# Backend Specific Instructions
-## Download large files:
-***Put these three files into the /data folder***  
-- `englishwords.txt`: https://drive.google.com/file/d/1SaXCfJu-zUjSiWVWMDbGxpu3QhbFaZKc/view?usp=share_link  
-- `glove.6B.50d.txt`: https://drive.google.com/file/d/1ZPHgJB1L90dNspy085HD0L7UWjgRYNua/view?usp=share_link  
-- `stopwords.txt`: https://drive.google.com/file/d/1VpvjO7y1P5LA-gbdQunnQhzqbWIZQ9t2/view?usp=share_link  
+# NetNinjas
+This search engine project consists of a Java-based backend for crawling and page ranking, and a frontend for user interface. The backend crawls and indexes web pages, calculates page ranks and serves search results to the frontend. The frontend provides a user-friendly interface for searching and viewing results.
 
-***Download six workers folders from Google Drive and only leave id, urlpages.table, index.table, and pageranks.table in the folders ***
-- `Google Drive Link`: https://drive.google.com/drive/u/1/folders/1ZJzV18o8drNQDO7vvCZWd3MWLW1HS1Wk
-
-***Note***: Each worker folder need to be stay on the root directory of /NetNinjas-ssh.
-
-## How to start the backend server
-To start the server, first start the KVS master and two KVS workers like this:
-
-1. java -cp lib/kvs.jar:lib/webserver.jar cis5550.kvs.Master 8000 
-2. java -cp lib/kvs.jar:lib/webserver.jar cis5550.kvs.Worker 8001 worker1 34.231.82.155:8000
-3. java -cp lib/kvs.jar:lib/webserver.jar cis5550.kvs.Worker 8002 worker2 34.231.82.155:8000
-4. java -cp lib/kvs.jar:lib/webserver.jar cis5550.kvs.Worker 8003 worker3 34.231.82.155:8000
-5. java -cp lib/kvs.jar:lib/webserver.jar cis5550.kvs.Worker 8004 worker4 34.231.82.155:8000
-6. java -cp lib/kvs.jar:lib/webserver.jar cis5550.kvs.Worker 8005 worker5 34.231.82.155:8000
-7. java -cp lib/kvs.jar:lib/webserver.jar cis5550.kvs.Worker 8006 worker6 34.231.82.155:8000
-
-Then start the backend server:
-- ***java -cp lib/kvs.jar:lib/webserver.jar:lib/gson.jar:lib/ranking.jar src/cis5550/jobs/SearchApi.java 34.231.82.155:8000 8080***
-
-Note that the last two arguments correspond to **KVSClient address** and **Backend port number**, respectively.  
-
-## Supported routes
-### #Route 1
+# Supported Routes
+## Frontend Routes
+### Route 1
 ***`get("/")`***
 
-This route returns the main page of Nenninjas search engine
+This route displays the main page of Nenninjas search engine. On this page, user can type in any word or phrases to search. 
 
 *Request Params*:  
 - None  
@@ -44,9 +20,29 @@ http://34.231.82.155:8080/
 ```
 
 *Example Response*: 
-A nice Netninjas search page
+Page with Netninjas title and single search bar just like Google. 
 
-### #Route 2
+### Route 2
+***`get("/searchResults")`***
+
+This API shows the search results and display those results to the user. 
+
+*Request Params*:  
+- None  
+
+*Query Params*:
+- **query**: the user input search query passed from the frontend
+
+*Example Input*:  
+```
+http://34.231.82.155:8080/searchResults?query=amazon
+```
+
+*Example Response*: 
+The webpage displays search results and features a search bar at the top for users to refine their search. The left side of the screen presents each result in a format that includes the page title, URL, and a snippet. On the top right corner, there is a list of five synonym words related to the search input.
+
+## Backend Routes
+### Route 1
 ***`get("/search") `*** 
 
 This search API accepts a query string as input and return a list of search results that match the query.
@@ -69,7 +65,7 @@ http://34.231.82.155:8080/search?query=apple?&pageSize=10&pageNum=1
 { "count": [ { "url": "1591", "title": "", "snippet": "" } ], "results": [ { "url": "https://music.apple.com:443/mz/browse", "title": " apple music", "snippet": "apple music african davido stays focused on the bag on unavailable...." }, { "url": "https://music.apple.com:443/lr/browse", "title": " apple music", "snippet": "apple music african a seminal voice in abujas hiphop scene comes to the fore...." }]}
 ```
 
-### Route 3
+### Route 2
 ***`get("/synonym")`***  
 
 This route will return sentences that are similar to input query and synonym words of each non-stop words
@@ -90,7 +86,7 @@ http://34.231.82.155:8080/synonym?query=pizza%20near%20Sydney_help
 { "results": { "similarSentences": [ "sandwich near sydney help", "pizza nearby sydney help", "pizza near melbourne help", "pizza near sydney helping" ], "storedSynonyms": [ { "rootWord": "help", "similarWords": [ "helping", "bring", "need", "take", "helps" ] }, { "rootWord": "sydney", "similarWords": [ "melbourne", "adelaide", "brisbane", "perth", "auckland" ] }, { "rootWord": "near", "similarWords": [ "nearby", "town", "area", "outskirts", "northeast" ] }, { "rootWord": "pizza", "similarWords": [ "sandwich", "sandwiches", "snack", "bakery", "fries" ] } ] } }  
 ```
 
-### Route 4
+### Route 3
 ***`get("/autocomplete")`***   
 This API accepts a query string as input and return a list of suggested search terms based on the last word of the search string.
 
@@ -110,7 +106,7 @@ http://34.231.82.155:8080/autocomplete?query=appl
 { "suggestions": [ { "term": "appl", "count": 0 }, { "term": "applause", "count": 0 }, { "term": "applauses", "count": 0 }, { "term": "applausive", "count": 0 }, { "term": "applausively", "count": 0 }, { "term": "applaud", "count": 0 }, { "term": "applaudable", "count": 0 }, { "term": "applaudably", "count": 0 }, { "term": "applauds", "count": 0 }, { "term": "applauder", "count": 0 } ] }
 ```
 
-### Route 5
+### Route 4
 ***`get("/emptyquery")`***  
 This route can be called when the input query is null. The response will be up to 5 most recent search histories.
 
@@ -130,7 +126,40 @@ http://34.231.82.155:8080/emptyquery
 { "results": [ { "url": "https://en.wikipedia.org:443/wiki/2023_in_hip_hop_music"}, { "url": "https://en.wikipedia.org:443/wiki/Taylor_Swift_(album)"} ] } 
 ```
 
-## EC2
+# Instructions to Start the Server
+## Download large files:
+***Put these three files into the /data folder***  
+- `englishwords.txt`: https://drive.google.com/file/d/1SaXCfJu-zUjSiWVWMDbGxpu3QhbFaZKc/view?usp=share_link  
+- `glove.6B.50d.txt`: https://drive.google.com/file/d/1ZPHgJB1L90dNspy085HD0L7UWjgRYNua/view?usp=share_link  
+- `stopwords.txt`: https://drive.google.com/file/d/1VpvjO7y1P5LA-gbdQunnQhzqbWIZQ9t2/view?usp=share_link  
+
+***Download six workers folders from Google Drive and only leave id, urlpages.table, index.table, and pageranks.table in the folders ***
+- `Google Drive Link`: https://drive.google.com/drive/u/1/folders/1ZJzV18o8drNQDO7vvCZWd3MWLW1HS1Wk
+
+***Note***: Each worker folder needs to be stay on the root directory of /NetNinjas-ssh.
+
+## How to start the backend server
+To start the server, first start the KVS master:
+
+1. java -cp lib/kvs.jar:lib/webserver.jar cis5550.kvs.Master 8000 
+
+And six KVS workers:
+1. java -cp lib/kvs.jar:lib/webserver.jar cis5550.kvs.Worker 8001 worker1 34.231.82.155:8000
+2. java -cp lib/kvs.jar:lib/webserver.jar cis5550.kvs.Worker 8002 worker2 34.231.82.155:8000
+3. java -cp lib/kvs.jar:lib/webserver.jar cis5550.kvs.Worker 8003 worker3 34.231.82.155:8000
+4. java -cp lib/kvs.jar:lib/webserver.jar cis5550.kvs.Worker 8004 worker4 34.231.82.155:8000
+5. java -cp lib/kvs.jar:lib/webserver.jar cis5550.kvs.Worker 8005 worker5 34.231.82.155:8000
+6. java -cp lib/kvs.jar:lib/webserver.jar cis5550.kvs.Worker 8006 worker6 34.231.82.155:8000
+
+***Before proceding to the next step, please wait until all KVS workers has been active with data loaded*** 
+- Check the status of backend KVS workers: ```http://34.231.82.155:8000/```
+
+Finally start the backend server and wait until all cached data is prepared:
+- ***java -cp lib/kvs.jar:lib/webserver.jar:lib/gson.jar:lib/ranking.jar src/cis5550/jobs/SearchApi.java 34.231.82.155:8000 8080***
+
+Note that the last two arguments correspond to **KVSClient address** and **Backend port number**, respectively.  
+
+# EC2 Setup
 ### Git setup
 To install Git on an EC2 instance running Amazon Linux 2, you can use the following command:
 ```bash
