@@ -83,6 +83,24 @@
         window.location.href = url;
       });
 
+      // Check geolocation auth and get users' location
+      // if (navigator.geolocation) {
+      //   navigator.geolocation.getCurrentPosition(
+      //     // success callback
+      //     function(position) {
+      //       const latitude = position.coords.latitude;
+      //       const longitude = position.coords.longitude;
+      //       console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+      //     },
+      //     // error callback
+      //     function(error) {
+      //       console.error(`Error getting location: ${error.message}`);
+      //     }
+      //   );
+      // } else {
+      //   console.error('Geolocation is not supported by this browser.');
+      // }
+
       function fetchRelativeWords(input) {
         const url = `${host}/autocomplete?query=${input}`;
         fetch(url)
@@ -98,13 +116,14 @@
               li.classList.add('hover-list-item');
               li.textContent = suggestion.term;
               li.addEventListener('click', () => {
-                window.location.href = `searchResults?query=${item.word}`;
+                window.location.href = `searchResults?query=${suggestion.term}`;
               });
               searchList.appendChild(li);
             });
           });
       }
 
+      // Fetch relative words when keyup events
       searchBar.addEventListener('keyup', (e) => {
         const searchString = e.target.value.toLowerCase();
         fetchRelativeWords(searchString);
@@ -114,6 +133,7 @@
       //   searchList.innerHTML = '';
       // });
 
+      // Auto Fetching Last Search when focusing on the input bar
       searchBar.addEventListener('focus', () => {
         const url = `${host}/emptyquery`;
         fetch(url)
@@ -133,10 +153,10 @@
                   <path d="M8 1a7 7 0 1 0 4.95 11.95l.707.707A8.001 8.001 0 1 1 8 0v1z"/>
                   <path d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5z"/>
                 </svg>
-                <span style="margin-left: 1rem">${item.query}</span>
+                <span style="margin-left: 1rem">${decodeURIComponent(item.query)}</span>
               `
               li.addEventListener('click', () => {
-                window.location.href = `searchResults?query=${item.word}`;
+                window.location.href = `searchResults?query=${item.query}`;
               });
               searchList.appendChild(li);
             });

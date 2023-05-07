@@ -30,7 +30,7 @@ This route displays the main page of Nenninjas search engine. On this page, user
 
 *Example Input*:  
 ```
-http://3.228.112.141:8080/
+http://netninja.cis5550.net:8080/
 ```
 
 *Example Response*: 
@@ -49,7 +49,7 @@ This API shows the search results and display those results to the user.
 
 *Example Input*:  
 ```
-http://3.228.112.141:8080/searchResults?query=amazon
+http://netninja.cis5550.net:8080/searchResults?query=amazon
 ```
 
 *Example Response*: 
@@ -71,7 +71,7 @@ This search API accepts a query string as input and return a list of search resu
 
 *Example Input*:  
 ```
-http://3.228.112.141:8080/search?query=apple?&pageSize=10&pageNum=1
+http://netninja.cis5550.net:8080/search?query=apple?&pageSize=10&pageNum=1
 ```
 
 *Example Response*: 
@@ -92,7 +92,7 @@ This route will return sentences that are similar to input query and synonym wor
 
 *Example Input*:
 ```  
-http://3.228.112.141:8080/synonym?query=pizza%20near%20Sydney_help
+http://netninja.cis5550.net:8080/synonym?query=pizza%20near%20Sydney_help
 ```
 
 *Example Response*:  
@@ -112,7 +112,7 @@ This API accepts a query string as input and return a list of suggested search t
 
 *Example Input*:  
 ```
-http://3.228.112.141:8080/autocomplete?query=appl
+http://netninja.cis5550.net:8080/autocomplete?query=appl
 ```
 
 *Example Response*:  
@@ -132,7 +132,7 @@ This route can be called when the input query is null. The response will be up t
 
 *Example Input*:  
 ```
-http://3.228.112.141:8080/emptyquery
+http://netninja.cis5550.net:8080/emptyquery
 ```
 
 *Example Response*:  
@@ -158,15 +158,15 @@ To start the server, first start the KVS master:
 1. java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Master 8000 
 
 And six KVS workers:
-1. java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8001 worker1 3.228.112.141:8000
-2. java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8002 worker2 3.228.112.141:8000
-3. java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8003 worker3 3.228.112.141:8000
-4. java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8004 worker4 3.228.112.141:8000
-5. java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8005 worker5 3.228.112.141:8000
-6. java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8006 worker6 3.228.112.141:8000
+1. java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8001 worker1 netninja.cis5550.net:8000
+2. java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8002 worker2 netninja.cis5550.net:8000
+3. java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8003 worker3 netninja.cis5550.net:8000
+4. java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8004 worker4 netninja.cis5550.net:8000
+5. java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8005 worker5 netninja.cis5550.net:8000
+6. java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8006 worker6 netninja.cis5550.net:8000
 
 ***Before proceding to the next step, please wait until all KVS workers has been active with data loaded*** 
-- Check the status of backend KVS workers: ```http://3.228.112.141:8000/```
+- Check the status of backend KVS workers: ```http://netninja.cis5550.net:8000/```
 
 Finally start the backend server and wait until all cached data is prepared:
 - ***java -cp lib/kvs.jar:lib/webserver.jar:lib/gson.jar:lib/ranking.jar:lib/tools.jar src/cis5550/jobs/SearchApi.java 3.228.112.141:8000 8080***
@@ -174,7 +174,7 @@ Finally start the backend server and wait until all cached data is prepared:
 Note that the last two arguments correspond to **KVSClient address** and **Backend port number**, respectively.  
 
 ## EC2 Deployment and Setup
-We have deployed our web application on an EC2 instance on AWS and have also set up a domain name for it. The website is available on ```http://3.228.112.141:8080/```   
+We have deployed our web application on an EC2 instance on AWS and have also set up a domain name for it. The website is available on ```http://3.228.112.141:8080/```  and ```http://netninja.cis5550.net:8080/``` 
 ### Git setup
 To install Git on an EC2 instance running Amazon Linux 2, you can use the following command:
 ```bash

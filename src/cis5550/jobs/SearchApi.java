@@ -117,8 +117,8 @@ public class SearchApi {
     public static String searchResultsPage(Request req, Response res) throws Exception {
        	// No query input is given, return the 5 most recent search queries
 		if (req.queryParams("query") == null) {
-            res.status(404, "No query content");
-			return "FAIL";
+            res.status(303, "No query entry, redirect to index page");
+			mainPage(req, res);
 		}
         String queryItem = req.queryParams("query");
         
