@@ -69,16 +69,18 @@ public class SearchApi {
 	protected static Trie trie = new Trie();
 
     public static void main(String[] args) throws Exception {
-    	if (args.length != 2) {
+    	if (args.length != 3) {
     		System.out.println("Missing arguments");
     		return ;
     	}
     	
     	String kvsInfo = args[0];
     	String backendPort = args[1];
+        String backendSecurePort = args[2];
     	KVSClient kvsClient = new KVSClient(kvsInfo);
     	port(Integer.parseInt(backendPort));
-    	System.out.println("Backend started at port: " + backendPort);
+        securePort(Integer.parseInt(backendSecurePort));
+    	System.out.println("Backend started at unsecure port: " + backendPort + " and secure port: " + backendSecurePort);
     	createWordVectors();
     	createTrie();
         garbageCollector();
@@ -117,8 +119,8 @@ public class SearchApi {
     public static String searchResultsPage(Request req, Response res) throws Exception {
        	// No query input is given, return the 5 most recent search queries
 		if (req.queryParams("query") == null) {
-            res.status(404, "No query content");
-			return "FAIL";
+            res.status(303, "No query entry, redirect to index page");
+			mainPage(req, res);
 		}
         String queryItem = req.queryParams("query");
         
