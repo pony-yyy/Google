@@ -63,6 +63,7 @@ public class SearchApi {
     private static final String Glove = "glove.6B.50d.txt";
     private static final String EnglishWords = "englishwords.txt";
 	private static final String pageRankTable = "pageranks.table";
+    private static final String pageRankTableSecond = "pageranks2.table";
     private static final int numHistoryUrls = 5;
     private static final int numAutoComplete = 10;
     
@@ -132,7 +133,8 @@ public class SearchApi {
     }
     
     public static void createPageRankTable() throws IOException {
-    	Scanner scanner = new Scanner(Paths.get("data/" + pageRankTable));
+        // Scanner scanner = new Scanner(Paths.get("data/" + pageRankTable));
+    	Scanner scanner = new Scanner(Paths.get("data/" + pageRankTableSecond));
     	while (scanner.hasNextLine()) {
     		    String[] line = scanner.nextLine().split(" ");
     		    String url = line[0];

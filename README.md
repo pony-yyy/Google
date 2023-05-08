@@ -148,19 +148,23 @@ http://netninja.cis5550.net:8080/emptyquery
 { "results": [ { "url": "https://en.wikipedia.org:443/wiki/2023_in_hip_hop_music"}, { "url": "https://en.wikipedia.org:443/wiki/Taylor_Swift_(album)"} ] } 
 ```
 
-## Instructions to Download Necessary Files and Start the Server
+## Instructions to Download Necessary Files and Start the Server both locally and on AWS EC2
+***Note: The below steps are used only if you want to run program by yourself. Our server is already started in the background. You can use our website directly.***
+__________
+## Run Program locally:
 ### Download large files:
 ***Put these three files into the /data folder***  
-- `englishwords.txt`: https://drive.google.com/file/d/1SaXCfJu-zUjSiWVWMDbGxpu3QhbFaZKc/view?usp=share_link  
-- `glove.6B.50d.txt`: https://drive.google.com/file/d/1ZPHgJB1L90dNspy085HD0L7UWjgRYNua/view?usp=share_link  
-- `stopwords.txt`: https://drive.google.com/file/d/1VpvjO7y1P5LA-gbdQunnQhzqbWIZQ9t2/view?usp=share_link  
+- `englishwords.txt`: ```https://drive.google.com/file/d/1SaXCfJu-zUjSiWVWMDbGxpu3QhbFaZKc/view?usp=share_link```  
+- `glove.6B.50d.txt`: ```https://drive.google.com/file/d/1ZPHgJB1L90dNspy085HD0L7UWjgRYNua/view?usp=share_link ``` 
+- `stopwords.txt`: ```https://drive.google.com/file/d/1VpvjO7y1P5LA-gbdQunnQhzqbWIZQ9t2/view?usp=share_link  ```
 
 ***Download six workers folders from Google Drive and only leave id, urlpages.table, index.table, and pageranks.table in the folders***
-- `Google Drive Link`: https://drive.google.com/drive/u/1/folders/1ZJzV18o8drNQDO7vvCZWd3MWLW1HS1Wk
+- `Google Drive Link`: ```https://drive.google.com/drive/u/1/folders/1ZJzV18o8drNQDO7vvCZWd3MWLW1HS1Wk```
 
-***Note***: Each worker folder needs to be stay on the root directory of /NetNinjas-ssh.
+***Note***: Each worker folder needs to be stay on the root directory of /NetNinjas-ssh.   
+***important***: Copy and paste worker2/pageranks.table into data/. Then rename the 'pageranks.table' to 'pageranks2.table'   
 
-### Compile all Ranking Related Files and Jar All of Them
+### Compile all Ranking Related Files and Jar All of Them Into ranking.jar
 First compile those files:
 1. ```javac -cp lib/webserver.jar:lib/kvs.jar:lib/gson.jar --source-path src src/cis5550/jobs/ProcessInput.java```
 2. ```javac -cp lib/webserver.jar:lib/kvs.jar:lib/gson.jar --source-path src src/cis5550/jobs/RankScore.java```
@@ -169,29 +173,64 @@ First compile those files:
 Then jar them into ranking.jar:   
 - ```jar -cvf ../lib/ranking.jar cis5550/jobs/*.class```
 
-### Start the backend server
+### Start the backend server(make sure you run those command in local environment)
 To start the server, first start the KVS master:
+- ```java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Master 8000 ```
 
-1. ```java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Master 8000 ```
-
-And six KVS workers:
-1. ```java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8001 worker1 netninja.cis5550.net:8000```
-2. ```java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8002 worker2 netninja.cis5550.net:8000```
-3. ```java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8003 worker3 netninja.cis5550.net:8000```
-4. ```java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8004 worker4 netninja.cis5550.net:8000```
-5. ```java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8005 worker5 netninja.cis5550.net:8000```
-6. ```java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8006 worker6 netninja.cis5550.net:8000```
+And then six KVS workers:   
+- ```java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8001 worker1 localhost:8000```
+- ```java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8002 worker2 localhost:8000```    
+- ```java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8003 worker3 localhost:8000```
+- ```java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8004 worker4 localhost:8000``` 
+- ```java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8005 worker5 localhost:8000```
+- ```java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8006 worker6 localhost:8000```
 
 ***Before proceding to the next step, please wait until all KVS workers has been active with data loaded*** 
-- Check the status of backend KVS workers: ```http://netninja.cis5550.net:8000/```
+- Check the status of backend KVS workers: ```http://localhost:8000/```
 
-Finally start the backend server and wait until all cached data is prepared:
-- ***java -cp lib/kvs.jar:lib/webserver.jar:lib/gson.jar:lib/ranking.jar:lib/tools.jar src/cis5550/jobs/SearchApi.java 3.228.112.141:8000 8080 8443***
+Finally start the backend server locally and wait until all cached data is prepared:
+- ***java -cp lib/kvs.jar:lib/webserver.jar:lib/gson.jar:lib/ranking.jar:lib/tools.jar src/cis5550/jobs/SearchApi.java localhost:8000 8080 8443***
 
-Note that the last two arguments correspond to **KVSClient address** and **Backend port number**, respectively.  
+Note that the last three arguments correspond to **KVSClient address**, **Backend unsecure port number**, and ***Backend secure port number*** respectively.  
+____
+## Run Program on EC2:
+***Note: There is no need to download files. All files has been uploaded on the EC2 instances***
+### SSH to fource EC2 instances
+***Find the two pem files in the /pem folder***    
+Master instances:   
+- ```ssh ec2-user@3.228.112.141 -i pem/CIS5550-NetNinjas-master.pem```
+
+Worker isntances:
+- ```ssh ec2-user@100.24.160.86 -i pem/CIS5550-NetNinjas-worker.pem```
+- ```ssh ec2-user@44.207.197.71 -i pem/CIS5550-NetNinjas-worker.pem```
+- ```ssh ec2-user@44.208.245.156 -i pem/CIS5550-NetNinjas-worker.pem```
+
+### Start the backend server
+To start the server, first start the KVS master on the Master EC2(public IP: 3.228.112.141):
+
+- ```java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Master 8000 ```
+
+And then six KVS workers:  
+Worker 1 and 2 run on one EC2 instance(public IP: 100.24.160.86): 
+- ```java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8001 worker1 100.24.160.86:8000```
+- ```java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8002 worker2 100.24.160.86:8000```  
+
+Worker 3 and 4 run on one EC2 instance(public IP: 44.207.197.71):   
+- ```java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8001 worker3 100.24.160.86:8000```
+- ```java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8002 worker4 100.24.160.86:8000```
+
+Worker 5 and 6 run on one EC2 instance(public IP: 44.208.245.156):   
+- ```java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8001 worker5 100.24.160.86:8000```
+- ```java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8002 worker6 100.24.160.86:8000```
+
+***Before proceding to the next step, please wait until all KVS workers has been active with data loaded*** 
+- Check the status of backend KVS workers: ```http://100.24.160.86:8000/```
+
+Finally start the backend server on the Master EC2(public IP: 3.228.112.141) and wait until all cached data is prepared:
+- ***java -cp lib/kvs.jar:lib/webserver.jar:lib/gson.jar:lib/ranking.jar:lib/tools.jar src/cis5550/jobs/SearchApi.java 100.24.160.86:8000 8080 8443***
 
 ## EC2 Deployment and Setup
-We have deployed our web application on an EC2 instance on AWS and have also set up a domain name for it. The domain name is ```netninja.cis5550.net```
+We have deployed our web application on AWS EC2 instances and set up a domain name for it. The domain name is ```netninja.cis5550.net```
 ### Git setup
 To install Git on an EC2 instance running Amazon Linux 2, you can use the following command:
 ```bash
