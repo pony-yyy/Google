@@ -1,6 +1,7 @@
 # NetNinjas
 ## Introduction
-This search engine project consists of a Java-based backend for crawling and page ranking, and a frontend for user interface. The backend crawls and indexes web pages, calculates page ranks and serves search results to the frontend. The frontend provides a user-friendly interface for searching and viewing results.
+This search engine project consists of a Java-based backend for crawling and page ranking, and a frontend for user interface. The backend crawls and indexes web pages, calculates page ranks and serves search results to the frontend. The frontend provides a user-friendly interface for searching and viewing results.     
+***The website is available on ```http://3.228.112.141:8080/```, ```http://netninja.cis5550.net:8080/```, and ```https://netninja.cis5550.net:8443/```***
 
 ## Folder Structure
 **pages**
@@ -14,6 +15,13 @@ The jar libraries backend codes depend on
 
 **bin**
 The classess files
+
+## External Resources
+- Boostrap(https://getbootstrap.com/) - Powerful, extensible, and feature-packed frontend toolkit. Build and customize with Sass, utilize prebuilt grid system and components, and bring projects to life with powerful JavaScript plugins.
+- Gson(https://github.com/google/gson) - Gson is a Java library that can be used to convert Java Objects into their JSON representation. It can also be used to convert a JSON string to an equivalent Java object.
+- GloVe(https://nlp.stanford.edu/projects/glove/) - GloVe is an unsupervised learning algorithm for obtaining vector representations for words. Training is performed on aggregated global word-word co-occurrence statistics from a corpus, and the resulting representations showcase interesting linear substructures of the word vector space.
+- stopwords.txt(https://gist.github.com/larsyencken/1440509) - A txt file contains all common English stopwords
+- englishwords.txt(https://github.com/dwyl/english-words) - A txt file contains all common English words.
 
 ## Supported Routes
 ### Frontend Routes
@@ -152,18 +160,27 @@ http://netninja.cis5550.net:8080/emptyquery
 
 ***Note***: Each worker folder needs to be stay on the root directory of /NetNinjas-ssh.
 
+### Compile all Ranking Related Files and Jar All of Them
+First compile those files:
+1. ```javac -cp lib/webserver.jar:lib/kvs.jar:lib/gson.jar --source-path src src/cis5550/jobs/ProcessInput.java```
+2. ```javac -cp lib/webserver.jar:lib/kvs.jar:lib/gson.jar --source-path src src/cis5550/jobs/RankScore.java```
+3. ```javac -cp lib/webserver.jar:lib/kvs.jar:lib/gson.jar --source-path src src/cis5550/jobs/SearchApi.java```   
+
+Then jar them into ranking.jar:   
+- ```jar -cvf ../lib/ranking.jar cis5550/jobs/*.class```
+
 ### Start the backend server
 To start the server, first start the KVS master:
 
-1. java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Master 8000 
+1. ```java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Master 8000 ```
 
 And six KVS workers:
-1. java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8001 worker1 netninja.cis5550.net:8000
-2. java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8002 worker2 netninja.cis5550.net:8000
-3. java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8003 worker3 netninja.cis5550.net:8000
-4. java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8004 worker4 netninja.cis5550.net:8000
-5. java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8005 worker5 netninja.cis5550.net:8000
-6. java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8006 worker6 netninja.cis5550.net:8000
+1. ```java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8001 worker1 netninja.cis5550.net:8000```
+2. ```java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8002 worker2 netninja.cis5550.net:8000```
+3. ```java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8003 worker3 netninja.cis5550.net:8000```
+4. ```java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8004 worker4 netninja.cis5550.net:8000```
+5. ```java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8005 worker5 netninja.cis5550.net:8000```
+6. ```java -cp lib/kvs.jar:lib/webserver.jar:lib/tools.jar cis5550.kvs.Worker 8006 worker6 netninja.cis5550.net:8000```
 
 ***Before proceding to the next step, please wait until all KVS workers has been active with data loaded*** 
 - Check the status of backend KVS workers: ```http://netninja.cis5550.net:8000/```
@@ -174,7 +191,7 @@ Finally start the backend server and wait until all cached data is prepared:
 Note that the last two arguments correspond to **KVSClient address** and **Backend port number**, respectively.  
 
 ## EC2 Deployment and Setup
-We have deployed our web application on an EC2 instance on AWS and have also set up a domain name for it. The website is available on ```http://3.228.112.141:8080/```  and ```http://netninja.cis5550.net:8080/``` 
+We have deployed our web application on an EC2 instance on AWS and have also set up a domain name for it. The domain name is ```netninja.cis5550.net```
 ### Git setup
 To install Git on an EC2 instance running Amazon Linux 2, you can use the following command:
 ```bash
