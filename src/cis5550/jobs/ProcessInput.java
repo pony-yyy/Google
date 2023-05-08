@@ -27,10 +27,11 @@ public class ProcessInput {
 	private static final String stopwordTable = "stopwords.txt";
 	
 	public static String tokenizeAndNormalizeInput(String searchInput) {
+		String noAdd = searchInput.replaceAll("%2B", " ");
 		// Remove punctuation, CR, LF, and tab characters
-		String noPunct = searchInput.replaceAll("[\\p{Punct}\\s]+", " ").replaceAll("[^a-zA-Z0-9 ]", "");
+		String noPunct = noAdd.replaceAll("[\\p{Punct}\\s]+", " ").replaceAll("[^a-zA-Z0-9 ]", "");
 		// Convert string to lower case and split by space
-		String input = noPunct.toLowerCase();
+		String input = noPunct.toLowerCase().trim();
 		return input;
 	}
 	

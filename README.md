@@ -186,7 +186,7 @@ And six KVS workers:
 - Check the status of backend KVS workers: ```http://netninja.cis5550.net:8000/```
 
 Finally start the backend server and wait until all cached data is prepared:
-- ***java -cp lib/kvs.jar:lib/webserver.jar:lib/gson.jar:lib/ranking.jar:lib/tools.jar src/cis5550/jobs/SearchApi.java 3.228.112.141:8000 8080***
+- ***java -cp lib/kvs.jar:lib/webserver.jar:lib/gson.jar:lib/ranking.jar:lib/tools.jar src/cis5550/jobs/SearchApi.java 3.228.112.141:8000 8080 8443***
 
 Note that the last two arguments correspond to **KVSClient address** and **Backend port number**, respectively.  
 
