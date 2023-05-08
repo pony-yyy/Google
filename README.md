@@ -149,7 +149,7 @@ http://netninja.cis5550.net:8080/emptyquery
 ```
 
 ## Instructions to Download Necessary Files and Start the Server both locally and on AWS EC2
-***Note: The below steps are used only if you want to run program by yourself. Our server is already started in the background. You can use our website directly.***
+***Note: The below steps are used only if you want to run program by yourself. Our server has been already started in the background. You can use our website directly.***
 __________
 ## Run Program locally:
 ### Download large files:
