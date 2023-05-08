@@ -132,16 +132,14 @@ public class SearchApi {
     }
     
     public static void createPageRankTable() throws IOException {
-    	for (int i = 1; i <= workerSize; i++) {
-        	Scanner scanner = new Scanner(Paths.get("worker" + i + "/" + pageRankTable));
-    		while (scanner.hasNextLine()) {
+    	Scanner scanner = new Scanner(Paths.get("data/" + pageRankTable));
+    	while (scanner.hasNextLine()) {
     		    String[] line = scanner.nextLine().split(" ");
     		    String url = line[0];
     		    Double pageRank = Double.parseDouble(line[line.length - 1]);
     		    pageRankMap.put(url, pageRank);
     		}
-    		scanner.close();
-    	}		   
+    	scanner.close();	   
     }
     
     public static void createWordVectors() throws IOException {
@@ -246,81 +244,97 @@ public class SearchApi {
 	}
 
     public static String searchHandler(Request req, Response res, KVSClient kvsClient, String kvsInfo) throws Exception {
-    	try {
-            Long startTime = System.currentTimeMillis();
-    		String query = req.queryParams("query");
-    		String pageSize = req.queryParams("pageSize");
-    		String pageNum = req.queryParams("pageNum");
-    		
-    		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    		
-            String encodedQuery = URLEncoder.encode(query, StandardCharsets.UTF_8);
-    		// If the encodedQuery has its corresponding hashmap, then we can retrieve the result to speed up the query processing speed
-            if (outputMap.keySet() != null && outputMap.keySet().contains(encodedQuery) && queryPageNumAndPageSizeMap.get(encodedQuery).equals(pageSize + "_" + pageNum)) {
-            	List<SearchOutput> storedResults = outputMap.get(encodedQuery);
-                Map<String, List<SearchOutput>> jsonMap = new HashMap<>();
-                jsonMap.put("results", storedResults);
-                jsonMap.put("count", queryCountMap.get(encodedQuery));
-            	String jsonResponse = gson.toJson(jsonMap);
-            	accessedTimeMap.put(encodedQuery, System.currentTimeMillis());
-                System.out.println("search completed.");
-                System.out.println("-----------------");
-                res.write(jsonResponse.getBytes());
-                return "OK";
+    	final boolean[] isJobFinished = {false};
+        Thread taskThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+            	try {
+            		String query = req.queryParams("query");
+            		String pageSize = req.queryParams("pageSize");
+            		String pageNum = req.queryParams("pageNum");
+            		
+            		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            		
+                    String encodedQuery = URLEncoder.encode(query, StandardCharsets.UTF_8);
+            		// If the encodedQuery has its corresponding hashmap, then we can retrieve the result to speed up the query processing speed
+                    if (outputMap.keySet() != null && outputMap.keySet().contains(encodedQuery) && queryPageNumAndPageSizeMap.get(encodedQuery).equals(pageSize + "_" + pageNum)) {
+                    	List<SearchOutput> storedResults = outputMap.get(encodedQuery);
+                        Map<String, List<SearchOutput>> jsonMap = new HashMap<>();
+                        jsonMap.put("results", storedResults);
+                        jsonMap.put("count", queryCountMap.get(encodedQuery));
+                    	String jsonResponse = gson.toJson(jsonMap);
+                    	accessedTimeMap.put(encodedQuery, System.currentTimeMillis());
+                        res.write(jsonResponse.getBytes());
+                    }
+                    // Process search inputs
+                    String tokenizedInput = ProcessInput.tokenizeAndNormalizeInput(encodedQuery);
+                    String noStopWordInput = ProcessInput.removeStopWords(tokenizedInput);
+                    System.out.println("no stop input: " + noStopWordInput);
+                    // stemming or not? depends
+                    String stemmedWord = ProcessInput.stemWords(noStopWordInput);
+                    
+                    // Store each root words frequency
+                    for (String word : noStopWordInput.split("\\s+")) {
+                    	wordFrenquency.put(word, wordFrenquency.getOrDefault(word, 1) + 1);
+                    }
+                    // use stemmed word or no stop word input?
+                    Map<String, Set<String>> synonym = ProcessInput.findSynonyms(noStopWordInput, wordVectors, numSynonyms);
+                    
+                    // Get the priorityScoreMap in descending order
+                    Map<String, Double> priorityScoreMap = RankScore.calculatePriorityScore(synonym, wordFrenquency, kvsInfo, pageRankMap, titleMap);
+                    
+                    List<SearchOutput> storedResults = generateOutput(pageSize, pageNum, priorityScoreMap, kvsClient, noStopWordInput);
+                    
+                    // Put the total results into the outputMap
+                    outputMap.put(encodedQuery, storedResults);
+                    // Put the pageSize and PageNum into the map
+                    queryPageNumAndPageSizeMap.put(encodedQuery, pageSize + "_" + pageNum);  
+                	
+                    Map<String, List<SearchOutput>> jsonMap = new HashMap<>();
+                    List<SearchOutput> count = new ArrayList<>();
+                    count.add(new SearchOutput(String.valueOf(priorityScoreMap.keySet().size()), "", ""));
+                    queryCountMap.put(encodedQuery, count);
+                    
+                    jsonMap.put("count", count);
+                    jsonMap.put("results", storedResults);
+                    String jsonResponse = gson.toJson(jsonMap);
+                    
+                    // Update the time of the query in the accessedTimeMap 
+                    accessedTimeMap.put(encodedQuery, System.currentTimeMillis());
+                    
+                    // Put each search word and its frequency into the searchwordCount map
+                    for (String word : tokenizedInput.split("\\s+")) {
+                    	searchwordCount.put(word, searchwordCount.getOrDefault(word, 0) + 1);
+                    }
+                    isJobFinished[0] = true;
+                    res.write(jsonResponse.getBytes());
+            	} catch (Exception e) {
+            		try {
+						res.write("Error Occured".getBytes());
+					} catch (Exception e1) {
+						e.printStackTrace();
+					}
+            	}
             }
-            // Process search inputs
-            String tokenizedInput = ProcessInput.tokenizeAndNormalizeInput(encodedQuery);
-            System.out.println("search input: " + tokenizedInput);
-            String noStopWordInput = ProcessInput.removeStopWords(tokenizedInput);
-            System.out.println("no stop input: " + noStopWordInput);
-            // stemming or not? depends
-            String stemmedWord = ProcessInput.stemWords(noStopWordInput);
-            
-            // Store each root words frequency
-            for (String word : noStopWordInput.split("\\s+")) {
-            	wordFrenquency.put(word, wordFrenquency.getOrDefault(word, 1) + 1);
+        });
+    	
+    	taskThread.start();
+    	
+        try {
+            // Time out in 10 seconds
+            for (int i = 0; i < 10; i++) {
+                if (isJobFinished[0]) {
+                    return "OK";
+                }
+                Thread.sleep(1000); // Wait for 1 second
             }
-            // use stemmed word or no stop word input?
-            Map<String, Set<String>> synonym = ProcessInput.findSynonyms(noStopWordInput, wordVectors, numSynonyms);
-            
-            // Get the priorityScoreMap in descending order
-            Map<String, Double> priorityScoreMap = RankScore.calculatePriorityScore(synonym, wordFrenquency, kvsInfo, pageRankMap, titleMap);
-            
-            List<SearchOutput> storedResults = generateOutput(pageSize, pageNum, priorityScoreMap, kvsClient, noStopWordInput);
-            
-            // Put the total results into the outputMap
-            outputMap.put(encodedQuery, storedResults);
-            // Put the pageSize and PageNum into the map
-            queryPageNumAndPageSizeMap.put(encodedQuery, pageSize + "_" + pageNum);  
-        	
-            Map<String, List<SearchOutput>> jsonMap = new HashMap<>();
-            List<SearchOutput> count = new ArrayList<>();
-            count.add(new SearchOutput(String.valueOf(priorityScoreMap.keySet().size()), "", ""));
-            queryCountMap.put(encodedQuery, count);
-            
-            jsonMap.put("count", count);
-            jsonMap.put("results", storedResults);
-            String jsonResponse = gson.toJson(jsonMap);
-            
-            // Update the time of the query in the accessedTimeMap
-            accessedTimeMap.put(encodedQuery, System.currentTimeMillis());
-            
-            // Put each search word and its frequency into the searchwordCount map
-            for (String word : tokenizedInput.split("\\s+")) {
-            	searchwordCount.put(word, searchwordCount.getOrDefault(word, 0) + 1);
-            }
-
-            System.out.println("search completed.");
-            System.out.println("-----------------");
-            Long endTime = System.currentTimeMillis();
-            Double duration = (endTime - startTime) / 1000.0;
-            System.out.println("search completed in " + duration + " seconds");
-            res.write(jsonResponse.getBytes());
-            return "OK";
-    	} catch (Exception e) {
-    		res.write("Error Occured".getBytes());
-    		return "Internal Server Error";
-    	}
+            taskThread.interrupt();
+            res.status(408, "Time out");
+        } catch (InterruptedException e) {
+        	res.write("Error Occured".getBytes());
+            e.printStackTrace();
+        }
+		return "OK";
     }
     
     private static List<SearchOutput> generateOutput(String pageSize, String pageNum, Map<String, Double> priorityScoreMap, KVSClient kvsClient, String noStopWordInput) throws IOException {
