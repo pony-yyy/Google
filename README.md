@@ -1,7 +1,8 @@
 # NetNinjas
 ## Introduction
-This search engine project consists of a Java-based backend for crawling and page ranking, and a frontend for user interface. The backend crawls and indexes web pages, calculates page ranks and serves search results to the frontend. The frontend provides a user-friendly interface for searching and viewing results.     
-***The website is available on ```http://3.228.112.141:8080/```, ```http://netninja.cis5550.net:8080/```, and ```https://netninja.cis5550.net:8443/```***
+This search engine project consists of a Java-based backend for crawling and page ranking, and a frontend for user interface. The backend crawls and indexes web pages, calculates page ranks and serves search results to the frontend. The frontend provides a user-friendly interface for searching and viewing results.    
+
+[//]: # (***The website is available on ```http://3.228.112.141:8080/```, ```http://netninja.cis5550.net:8080/```, and ```https://netninja.cis5550.net:8443/```***)
 
 ## Folder Structure
 **pages**
